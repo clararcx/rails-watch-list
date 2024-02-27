@@ -1,4 +1,20 @@
-<h2>List Name: <%= @list.name %></h2>
-
-<%= link_to 'Add New Movie', new_list_bookmark_path(@list), class:'btn btn-primary'%>
-<%= link_to 'Back to Lists', lists_path, class:'btn btn-primary' %>
+<div><h2>List Name: <%= @list.name %></h2>
+<% @list.bookmarks.each do |bookmark| %>
+  <div class='card bg-light m-2' style="max-width: 18rem;">
+  <%movie = Movie.find(bookmark.movie_id) %>
+    <h2><%= movie.title %></h2>
+    <img src=<%=movie.poster_url%> alt="">
+    <p><%= movie.overview %></p>
+    <div class="card-footer border">
+          <p><%=bookmark.comment %></p>
+        </div>
+        <%= link_to "delete", bookmark_path(bookmark), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove #{movie.title} from your #{@list.name} list"}, class: 'text-danger' %>
+    </div>
+<% end %>
+<div>
+  <%= link_to "Add a movie", new_list_bookmark_path(@list) , class: "btn btn-primary my-2"%>
+</div>
+<div>
+  <%= link_to "Back to lists", lists_path , class: "btn btn-primary"%>
+  <%= button_to "Delete List", @list, method: :delete %>
+</div>
